@@ -46,10 +46,15 @@ class RequestHandler(BaseHTTPRequestHandler):
 				command = text[1:]
 				arg = ''
 				find_space = text.find(' ')
-				# split command into command and argument
-				if find_space >= 0:
-					command = text[1:find_space]
-					arg = text[find_space+1:]
+				find_newline = text.find('\n')
+				if find_space >= 0 or find_newline >= 0:
+					split_index = min(find_space, find_newline)
+					if find_space == -1:
+						split_index = find_newline
+					if find_newline == -1:
+						split_index = find_space
+					command = text[1:split_index]
+					arg = text[split_index+1:]
 				# trim /command@bot down to /command
 				find_at = command.find('@')
 				if find_at >= 0:
